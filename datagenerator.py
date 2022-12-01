@@ -4,12 +4,12 @@ import tensorflow as tf
 
 class DataGenerator(tf.keras.utils.Sequence):
     def __init__(self, df, path="train_images/", batch_size=32, shuffle=True):
-        self.df = df
+        self.df = df.copy()
         if 'prediction_id' not in df:
-            df['prediction_id'] = df["patient_id"].astype(str) + '_' + df["laterality"].astype(str)
+            self.df['prediction_id'] = df["patient_id"].astype(str) + '_' + df["laterality"].astype(str)
 
-        self.prediction_ids = df['prediction_id'].unique()
-        self.labels = df.groupby('prediction_id')['cancer'].max()
+        self.prediction_ids = self.df['prediction_id'].unique()
+        self.labels = self.df.groupby('prediction_id')['cancer'].max()
         self.path = path
         self.batch_size = batch_size
         self.shuffle = shuffle
