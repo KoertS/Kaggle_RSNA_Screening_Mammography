@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "rsna"
+version = "0.1.0"
+description = ""
+authors = ["KoertSchreurs <koert.schreurs@profit4cloud.nl>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.11"
+pandas = "^1.5.2"
+ipython = "^8.7.0"
+matplotlib = "^3.6.2"
+seaborn = "^0.12.1"
+tqdm = "^4.64.1"
+opencv-python = "^4.6.0.66"
+tensorflow = "^2.11.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
