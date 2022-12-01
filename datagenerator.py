@@ -38,7 +38,7 @@ class DataGenerator(tf.keras.utils.Sequence):
     def __data_generation(self, batch_indexes):
         paths = self.get_paths_images(batch_indexes)
         X = np.asarray([self.__get_input(path) for path in paths])
-        y = self.labels[batch_indexes]
+        y = np.array([self.labels[batch_indexes]])
         return X, y
 
     def get_paths_images(self, batch_indexes):
