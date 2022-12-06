@@ -7,9 +7,10 @@ class DataGenerator(tf.keras.utils.Sequence):
         self.df = df.copy()
         if 'prediction_id' not in df:
             self.df['prediction_id'] = df["patient_id"].astype(str) + '_' + df["laterality"].astype(str)
-
+            self.labels = self.df.groupby('prediction_id')['cancer'].max()
+        else:
+            self.inference = True
         self.prediction_ids = self.df['prediction_id'].unique()
-        self.labels = self.df.groupby('prediction_id')['cancer'].max()
         self.path = path
         self.batch_size = batch_size
         self.shuffle = shuffle
@@ -38,8 +39,11 @@ class DataGenerator(tf.keras.utils.Sequence):
     def __data_generation(self, batch_indexes):
         paths = self.get_paths_images(batch_indexes)
         X = np.asarray([self.__get_input(path) for path in paths])
-        y = np.array([self.labels[batch_indexes]])
-        return X, y
+        if self.inference:
+            return X, None
+        else:
+            y = np.array([self.labels[batch_indexes]])
+            return X, y
 
     def get_paths_images(self, batch_indexes):
         batch = self.df[self.df['prediction_id'].isin(batch_indexes)]
