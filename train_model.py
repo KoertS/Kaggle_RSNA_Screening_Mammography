@@ -10,4 +10,5 @@ model.compile(optimizer='adam',
               metrics=metrics)
 print(model.summary())
 
-history = model.fit(train_gen, validation_data=val_gen, epochs=5)
+history = model.fit(train_gen, validation_data=val_gen, epochs=2)
+model.save('models/test_model.h5')
