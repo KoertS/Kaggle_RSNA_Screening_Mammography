@@ -1,13 +1,13 @@
 import numpy as np
 import pandas as pd
 
-from datagenerator import DataGenerator
+from src.data.datagenerator import DataGenerator
 
 np.random.seed(0)
 
 
-def get_train_val_generator(train_size=0.8, batch_size=8, filename='input/train.csv'):
-    df = pd.read_csv(filename)
+def get_train_val_generator(path_df, path_images, train_size=0.8, batch_size=8):
+    df = pd.read_csv(path_df)
 
     patient_ids = df["patient_id"].unique()
     np.random.shuffle(patient_ids)
@@ -18,6 +18,6 @@ def get_train_val_generator(train_size=0.8, batch_size=8, filename='input/train.
     df_train = df[df['patient_id'].isin(train_ids)]
     df_val = df[df['patient_id'].isin(val_ids)]
 
-    train_gen = DataGenerator(df_train, batch_size=batch_size)
-    val_gen = DataGenerator(df_val, batch_size=batch_size)
+    train_gen = DataGenerator(dataframe=df_train, path_images=path_images, batch_size=batch_size)
+    val_gen = DataGenerator(dataframe=df_val, path_images=path_images, batch_size=batch_size)
     return train_gen, val_gen

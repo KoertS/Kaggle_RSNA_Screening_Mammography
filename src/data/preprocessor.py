@@ -20,7 +20,7 @@ class Preprocessor:
             p.map(self.process_directory_patient, directories_patients)
 
     def process_directory_patient(self, directory_patient):
-        parent_directory = str(directory_patient).split('/')[-1]
+        parent_directory = os.path.split(directory_patient)[-1]
         processed_dir = f'{self.output_directory}/{parent_directory}'
         make_dir(processed_dir)
         for image_path in directory_patient.iterdir():

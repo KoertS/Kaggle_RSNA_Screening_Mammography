@@ -3,15 +3,17 @@ import tensorflow as tf
 
 
 class DataGenerator(tf.keras.utils.Sequence):
-    def __init__(self, df, path="train_images/", batch_size=32, shuffle=True):
-        self.df = df.copy()
-        if 'prediction_id' not in df:
-            self.df['prediction_id'] = df["patient_id"].astype(str) + '_' + df["laterality"].astype(str)
-            self.labels = self.df.groupby('prediction_id')['cancer'].max()
+    def __init__(self, dataframe, path_images, batch_size=32, shuffle=True):
+        self.dataframe = dataframe.copy()
+        if 'prediction_id' not in dataframe:
+            self.dataframe['prediction_id'] = dataframe["patient_id"].astype(str) + '_' + dataframe[
+                "laterality"].astype(str)
+            self.labels = self.dataframe.groupby('prediction_id')['cancer'].max()
+            self.inference = False
         else:
             self.inference = True
-        self.prediction_ids = self.df['prediction_id'].unique()
-        self.path = path
+        self.prediction_ids = self.dataframe['prediction_id'].unique()
+        self.path_images = path_images
         self.batch_size = batch_size
         self.shuffle = shuffle
         self.on_epoch_end()
@@ -34,7 +36,7 @@ class DataGenerator(tf.keras.utils.Sequence):
     def on_epoch_end(self):
         """Updates indexes after each epoch"""
         if self.shuffle:
-            self.df = self.df.sample(frac=1).reset_index(drop=True)
+            self.dataframe = self.dataframe.sample(frac=1).reset_index(drop=True)
 
     def __data_generation(self, batch_indexes):
         paths = self.get_paths_images(batch_indexes)
@@ -46,9 +48,9 @@ class DataGenerator(tf.keras.utils.Sequence):
             return X, y
 
     def get_paths_images(self, batch_indexes):
-        batch = self.df[self.df['prediction_id'].isin(batch_indexes)]
+        batch = self.dataframe[self.dataframe['prediction_id'].isin(batch_indexes)]
         rows_batch = self.get_rows(batch)
-        return self.path + rows_batch["patient_id"].astype(str) + "/" + rows_batch["image_id"].astype(
+        return self.path_images + rows_batch["patient_id"].astype(str) + "/" + rows_batch["image_id"].astype(
             str) + ".png"
 
     def get_rows(self, batch):
