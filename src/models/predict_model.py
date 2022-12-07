@@ -19,4 +19,4 @@ test_gen = DataGenerator(dataframe=df_test, batch_size=1, path_images=image_dir)
 y_pred = model.predict(test_gen).T[0]
 df_submission = pd.DataFrame({'prediction_id': prediction_ids, 'cancer': y_pred})
 print(df_submission.head())
-df_submission.to_csv('submission.csv', index=False)
+df_submission.to_csv('../../data/output/submission.csv', index=False)
