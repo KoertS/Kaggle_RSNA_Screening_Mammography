@@ -10,7 +10,7 @@ custom_metric = {"pfbeta_tf": pfbeta_tf}
 path_model = '../../models/test_model.h5'
 model = tf.keras.models.load_model(path_model, custom_objects=custom_metric)
 
-filename = '../../data/external/test.csv'
+filename = '../../data/raw/test.csv'
 df_test = pd.read_csv(filename)
 patient_ids = df_test["patient_id"].unique()
 prediction_ids = df_test["prediction_id"].unique()

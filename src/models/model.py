@@ -19,9 +19,9 @@ def build_efficient_net(model_name="EfficientNetB4",
                                     include_top=include_top)
     inp = base.inputs
     x = base.output
-    x = tf.keras.layers.GlobalAveragePooling2D()(x)  # use GAP to get pooling result form conv outputs
-    x = tf.keras.layers.Dense(32, activation='silu')(x)  # use activation to apply non-linearity
-    x = tf.keras.layers.Dense(1, activation='sigmoid')(x)  # use sigmoid to convert predictions to [0-1]
+    x = tf.keras.layers.GlobalAveragePooling2D()(x)
+    x = tf.keras.layers.Dense(32, activation='silu')(x)
+    x = tf.keras.layers.Dense(1, activation='sigmoid')(x)
     model = tf.keras.Model(inputs=inp, outputs=x)
     return model
 

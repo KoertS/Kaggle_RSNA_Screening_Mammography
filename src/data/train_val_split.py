@@ -6,8 +6,8 @@ from src.data.datagenerator import DataGenerator
 np.random.seed(0)
 
 
-def get_train_val_generator(path_df, path_images, train_size=0.8, batch_size=8):
-    df = pd.read_csv(path_df)
+def get_train_val_generator(path_dataframe, path_images, train_size, batch_size):
+    df = pd.read_csv(path_dataframe)
 
     patient_ids = df["patient_id"].unique()
     np.random.shuffle(patient_ids)
