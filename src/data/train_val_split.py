@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-from datagenerator import DataGenerator
+from . import datagenerator
 
 np.random.seed(0)
 
@@ -18,6 +18,6 @@ def get_train_val_generator(path_dataframe, path_images, train_size, batch_size)
     df_train = df[df['patient_id'].isin(train_ids)]
     df_val = df[df['patient_id'].isin(val_ids)]
 
-    train_gen = DataGenerator(dataframe=df_train, path_images=path_images, batch_size=batch_size)
-    val_gen = DataGenerator(dataframe=df_val, path_images=path_images, batch_size=batch_size)
+    train_gen = datagenerator.DataGenerator(dataframe=df_train, path_images=path_images, batch_size=batch_size)
+    val_gen = datagenerator.DataGenerator(dataframe=df_val, path_images=path_images, batch_size=batch_size)
     return train_gen, val_gen
