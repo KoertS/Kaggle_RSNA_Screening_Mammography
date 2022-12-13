@@ -1,3 +1,4 @@
+import argparse
 import os
 
 import wandb
@@ -6,7 +7,11 @@ import yaml
 from data.train_val_split import get_train_val_generator
 from models.model import build_test_model, pfbeta_tf
 
-with open('../../config/config.yaml') as f:
+parser = argparse.ArgumentParser()
+parser.add_argument('--config', type=str, nargs='?', default='../../config/config.yaml', help='Path to the config file')
+args = parser.parse_args()
+
+with open(args.config) as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
 
 wandb.login(key=os.environ.get("WANDB_API_KEY"))
