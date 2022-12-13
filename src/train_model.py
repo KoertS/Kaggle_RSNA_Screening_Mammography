@@ -3,10 +3,10 @@ import os
 import wandb
 import yaml
 
-from src.data.train_val_split import get_train_val_generator
-from src.models.model import build_test_model, pfbeta_tf
+from .data.train_val_split import get_train_val_generator
+from .models.model import build_test_model, pfbeta_tf
 
-with open('../../config/config.yaml') as f:
+with open('../config/config.yaml') as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
 
 wandb.login(key=os.environ.get("WANDB_API_KEY"))

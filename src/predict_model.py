@@ -1,16 +1,16 @@
 import pandas as pd
 import tensorflow as tf
 
-from model import pfbeta_tf
+from models.model import pfbeta_tf
 from src.data.datagenerator import DataGenerator
 
-image_dir = '../../data/processed/test_images_processed/'
+image_dir = '../data/processed/test_images_processed/'
 
 custom_metric = {"pfbeta_tf": pfbeta_tf}
-path_model = '../../models/test_model.h5'
+path_model = '../models/test_model.h5'
 model = tf.keras.models.load_model(path_model, custom_objects=custom_metric)
 
-filename = '../../data/raw/test.csv'
+filename = '../data/raw/test.csv'
 df_test = pd.read_csv(filename)
 patient_ids = df_test["patient_id"].unique()
 prediction_ids = df_test["prediction_id"].unique()
