@@ -1,4 +1,4 @@
-from src.data.preprocessor import Preprocessor
+from preprocessor import Preprocessor
 
 if __name__ == '__main__':
     input_directory = '../../data/raw/test_images/'
