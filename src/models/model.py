@@ -39,3 +39,9 @@ def pfbeta_tf(labels, preds, beta=1):
         return result
     else:
         return 0.0
+
+
+def get_model(model_name):
+    if model_name == 'EfficientNet':
+        return build_efficient_net()
+    return build_test_model()
