@@ -1,9 +1,10 @@
 data:
   train_dataframe: ../data/raw/train.csv
-  test_frame: ../data/raw/test.csv
+  test_dataframe: ../data/raw/test.csv
   train_images_processed_dir: ../data/processed/train_images_processed/
   test_images_processed_dir: ../data/processed/test_images_processed/
-  path_model: ../models/
+  path_models: ../models/
+  path_submission: ../data/output/submission.csv
 
 hyperparams:
   train_size: 0.8
