@@ -1,4 +1,5 @@
 import argparse
+from pathlib import Path
 
 import pandas as pd
 import yaml
@@ -26,4 +27,7 @@ if __name__ == '__main__':
     y_pred = model.predict(test_gen).T[0]
     df_submission = pd.DataFrame({'prediction_id': prediction_ids, 'cancer': y_pred})
     print(df_submission.head())
-    df_submission.to_csv(config['data']['path_submission'], index=False)
+    output_path = config['data']['path_submission']
+    output_file = Path(output_path)
+    output_file.parent.mkdir(exist_ok=True, parents=True)
+    df_submission.to_csv(output_path, index=False)

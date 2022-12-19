@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 import efficientnet.tfkeras as efn
 import tensorflow as tf
@@ -59,6 +60,8 @@ def create_model(hyperparams):
 def save_model(model, dir_models, name, ):
     model_path = dir_models + name
     print(f'Saving model to: {model_path}')
+    output_file = Path(model_path)
+    output_file.parent.mkdir(exist_ok=True, parents=True)
     model.save(model_path)
 
 
