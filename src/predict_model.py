@@ -27,7 +27,7 @@ if __name__ == '__main__':
     y_pred = model.predict(test_gen).T[0]
     df_submission = pd.DataFrame({'prediction_id': prediction_ids, 'cancer': y_pred})
     print(df_submission.head())
-    output_path = config['data']['path_submission']
+    output_path = config['data']['path_submission'][args.kaggle]
     output_file = Path(output_path)
     output_file.parent.mkdir(exist_ok=True, parents=True)
     df_submission.to_csv(output_path, index=False)
