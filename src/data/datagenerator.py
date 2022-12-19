@@ -103,7 +103,7 @@ def get_path_images(config_data, environment):
 
 
 def get_test_generator(test_dataframe, config_data, environment):
-    preprocessed_dir = config_data['dir_processed'][environment] + config_data['test_images_dir']
+    preprocessed_dir = 'processed' + config_data['test_images_dir']
     if not os.path.isdir(preprocessed_dir):
         input_directory = config_data['dir_raw'][environment] + config_data['test_images_dir']
         print(f'{preprocessed_dir} not found')
