@@ -68,7 +68,7 @@ class DataGenerator(tf.keras.utils.Sequence):
 def get_train_val_generator(config, environment):
     df = get_train_dataframe(config['data'], environment)
     df_train, df_val = split_dataframe(df, config['hyperparams']['train_size'])
-    path_images = get_path_images(config['data'], environment)
+    path_images = config['data']['dir_processed'][environment]['train'] + config['data']['train_images_dir']
     train_gen = DataGenerator(dataframe=df_train, path_images=path_images,
                               batch_size=config['hyperparams']['batch_size'])
     val_gen = DataGenerator(dataframe=df_val, path_images=path_images,
@@ -98,12 +98,8 @@ def get_test_dataframe(config_data, environment):
     return pd.read_csv(path)
 
 
-def get_path_images(config_data, environment):
-    return config_data['dir_processed'][environment] + config_data['train_images_dir']
-
-
 def get_test_generator(test_dataframe, config_data, environment):
-    preprocessed_dir = 'processed/' + config_data['test_images_dir']
+    preprocessed_dir = config_data['dir_processed'][environment]['test'] + config_data['test_images_dir']
     if not os.path.isdir(preprocessed_dir):
         input_directory = config_data['dir_raw'][environment] + config_data['test_images_dir']
         print(f'{preprocessed_dir} not found')
@@ -112,5 +108,5 @@ def get_test_generator(test_dataframe, config_data, environment):
                                     preprocessed_dir=preprocessed_dir,
                                     workers=32)
         preprocessor.preprocess()
-
+    print(f'Creating datagenerator with images from: {preprocessed_dir}')
     return DataGenerator(dataframe=test_dataframe, batch_size=1, path_images=preprocessed_dir, shuffle=False)
