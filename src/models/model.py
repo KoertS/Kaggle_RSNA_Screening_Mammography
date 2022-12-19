@@ -7,7 +7,7 @@ def build_test_model(inp_dim=(256, 256, 3)):
     x = tf.keras.layers.Conv2D(32, (3, 3), activation='relu', strides=4)(inputs)
     x = tf.keras.layers.Flatten()(x)
     outputs = tf.keras.layers.Dense(1, activation='sigmoid')(x)
-    model = tf.keras.models.Model(inputs=inputs, outputs=outputs)
+    model = tf.keras.models.Model(inputs=inputs, outputs=outputs, name='test_model')
     return model
 
 
@@ -22,7 +22,7 @@ def build_efficient_net(model_name="EfficientNetB4",
     x = tf.keras.layers.GlobalAveragePooling2D()(x)
     x = tf.keras.layers.Dense(32, activation='silu')(x)
     x = tf.keras.layers.Dense(1, activation='sigmoid')(x)
-    model = tf.keras.Model(inputs=inp, outputs=x)
+    model = tf.keras.Model(inputs=inp, outputs=x, name=model_name)
     return model
 
 
@@ -41,7 +41,28 @@ def pfbeta_tf(labels, preds, beta=1):
         return 0.0
 
 
-def get_model(model_name):
-    if model_name == 'EfficientNet':
-        return build_efficient_net()
-    return build_test_model()
+def create_model(hyperparams):
+    if hyperparams['model'] == 'EfficientNet':
+        model = build_efficient_net()
+    else:
+        model = build_test_model()
+
+    metrics = [pfbeta_tf]
+    model.compile(optimizer=hyperparams['optimizer'],
+                  loss=hyperparams['loss'],
+                  metrics=metrics)
+    return model
+
+
+def save_model(model, dir_models, name, ):
+    model_path = dir_models + name
+    print(f'Saving model to: {model_path}')
+    model.save(model_path)
+
+
+def load_model(dir_models, name):
+    model_path = dir_models + name
+    custom_metric = {"pfbeta_tf": pfbeta_tf}
+    model = tf.keras.models.load_model(model_path, custom_objects=custom_metric)
+    print(f'Loading model from: {model_path}')
+    return model

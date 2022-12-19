@@ -1,5 +1,10 @@
+import os
+
 import numpy as np
+import pandas as pd
 import tensorflow as tf
+
+from .preprocessor import Preprocessor
 
 
 class DataGenerator(tf.keras.utils.Sequence):
@@ -58,3 +63,54 @@ class DataGenerator(tf.keras.utils.Sequence):
         only_MLO_view_images = batch[batch['view'] == 'MLO']
         only_one_per_prediction_id = only_MLO_view_images.groupby('prediction_id')[['patient_id', 'image_id']].max()
         return only_one_per_prediction_id
+
+
+def get_train_val_generator(config, environment):
+    df = get_train_dataframe(config['data'], environment)
+    df_train, df_val = split_dataframe(df, config['hyperparams']['train_size'])
+    path_images = get_path_images(config['data'], environment)
+    train_gen = DataGenerator(dataframe=df_train, path_images=path_images,
+                              batch_size=config['hyperparams']['batch_size'])
+    val_gen = DataGenerator(dataframe=df_val, path_images=path_images,
+                            batch_size=config['hyperparams']['batch_size'])
+    return train_gen, val_gen
+
+
+def split_dataframe(df, ratio, shuffle=True):
+    patient_ids = df["patient_id"].unique()
+    if shuffle:
+        np.random.shuffle(patient_ids)
+    train_size = int(len(patient_ids) * ratio)
+    train_ids = patient_ids[:train_size]
+    val_ids = patient_ids[train_size:]
+    df_train = df[df['patient_id'].isin(train_ids)]
+    df_val = df[df['patient_id'].isin(val_ids)]
+    return df_train, df_val
+
+
+def get_train_dataframe(config_data, environment):
+    path = config_data['dir_raw'][environment] + config_data['train_dataframe']
+    return pd.read_csv(path)
+
+
+def get_test_dataframe(config_data, environment):
+    path = config_data['dir_raw'][environment] + config_data['test_dataframe']
+    return pd.read_csv(path)
+
+
+def get_path_images(config_data, environment):
+    return config_data['dir_processed'][environment] + config_data['train_images_dir']
+
+
+def get_test_generator(test_dataframe, config_data, environment):
+    preprocessed_dir = config_data['dir_processed'][environment] + config_data['test_images_dir']
+    if not os.path.isdir(preprocessed_dir):
+        input_directory = config_data['dir_raw'][environment] + config_data['test_images_dir']
+        print(f'{preprocessed_dir} not found')
+        print(f'Preprocessing: {input_directory} to {preprocessed_dir}')
+        preprocessor = Preprocessor(input_dir=input_directory,
+                                    preprocessed_dir=preprocessed_dir,
+                                    workers=32)
+        preprocessor.preprocess()
+
+    return DataGenerator(dataframe=test_dataframe, batch_size=1, path_images=preprocessed_dir, shuffle=False)

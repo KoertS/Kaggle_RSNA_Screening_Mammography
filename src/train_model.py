@@ -4,10 +4,11 @@ import os
 import wandb
 import yaml
 
-from data.train_val_split import get_train_val_generator
-from models.model import get_model, pfbeta_tf
+from data.datagenerator import get_train_val_generator
+from models.model import create_model, save_model
 
 parser = argparse.ArgumentParser()
+parser.add_argument("--kaggle", nargs="?", default='local', const="kaggle", help="Use Kaggle data paths")
 parser.add_argument('--config', type=str, nargs='?', default='../config/config.yaml', help='Path to the config file')
 args = parser.parse_args()
 
@@ -19,20 +20,10 @@ wandb.init(project=os.environ.get("WANDB_PROJECT_NAME"))
 wandb.config.update(config['hyperparams'])
 wandb_callback = wandb.keras.WandbCallback(log_weights=True)
 
-model = get_model(config['hyperparams']['model'])
-train_gen, val_gen = get_train_val_generator(path_dataframe=config['data']['train_dataframe'],
-                                             path_images=config['data']['train_images_processed_dir'],
-                                             train_size=config['hyperparams']['train_size'],
-                                             batch_size=config['hyperparams']['batch_size'])
-metrics = [pfbeta_tf]
-model.compile(optimizer=config['hyperparams']['optimizer'],
-              loss=config['hyperparams']['loss'],
-              metrics=metrics)
+model = create_model(config['hyperparams'])
 print(model.summary())
+
+train_gen, val_gen = get_train_val_generator(config=config, environment=args.kaggle)
 history = model.fit(train_gen, validation_data=val_gen, epochs=config['hyperparams']['epochs'],
                     callbacks=[wandb_callback])
-
-path_models = config['data']['path_model']
-model_name = wandb.run.name.replace('-', '_')
-model_path = f'{path_models}/{model_name}'
-model.save(model_path)
+save_model(model, name=wandb.run.name.replace('-', '_'), dir_models=config['data']['dir_models'])

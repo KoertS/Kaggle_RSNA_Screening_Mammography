@@ -1,9 +1,15 @@
 data:
-  train_dataframe: ../data/raw/train.csv
-  test_dataframe: ../data/raw/test.csv
-  train_images_processed_dir: ../data/processed/train_images_processed/
-  test_images_processed_dir: ../data/processed/test_images_processed/
-  path_models: ../models/
+  dir_raw:
+    local: ../data/raw/
+    kaggle: /kaggle/input/rsna-breast-cancer-detection/
+  dir_processed:
+    local: ../data/processed/
+    kaggle: /kaggle/input/rsna-mammography-images-as-pngs/images_as_pngs/
+  train_dataframe: train.csv
+  test_dataframe: test.csv
+  train_images_dir: train_images/
+  test_images_dir: test_images/
+  dir_models: ../models/
   path_submission: ../data/output/submission.csv
 
 hyperparams:

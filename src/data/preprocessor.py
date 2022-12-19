@@ -8,9 +8,9 @@ from PIL import Image
 
 
 class Preprocessor:
-    def __init__(self, input_directory, output_directory, resize_to=(256, 256), workers=64):
-        self.input_directory = input_directory
-        self.output_directory = output_directory
+    def __init__(self, input_dir, preprocessed_dir, resize_to=(256, 256), workers=64):
+        self.input_directory = input_dir
+        self.output_directory = preprocessed_dir
         self.resize_to = resize_to
         self.workers = workers
 
