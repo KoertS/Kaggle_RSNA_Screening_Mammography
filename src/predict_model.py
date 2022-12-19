@@ -11,13 +11,13 @@ if __name__ == '__main__':
     parser.add_argument('--config', type=str, nargs='?', default='../config/config.yaml',
                         help='Path to the config file')
     parser.add_argument("--kaggle", nargs="?", default='local', const="kaggle", help="Use Kaggle data paths")
-    parser.add_argument('--model', type=str, nargs='?', default='test_model.h5', help='Filename of model h5 file')
+    parser.add_argument('--model', type=str, nargs='?', default='../models/test_model.h5', help='Path to model h5 file')
     args = parser.parse_args()
 
     with open(args.config) as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
 
-    model = load_model(name=args.model, dir_models=config['data']['dir_models'])
+    model = load_model(path=args.model)
     df_test = get_test_dataframe(config_data=config['data'], environment=args.kaggle)
     prediction_ids = df_test["prediction_id"].unique()
 

@@ -1,3 +1,5 @@
+import os
+
 import efficientnet.tfkeras as efn
 import tensorflow as tf
 
@@ -60,9 +62,9 @@ def save_model(model, dir_models, name, ):
     model.save(model_path)
 
 
-def load_model(dir_models, name):
-    model_path = dir_models + name
+def load_model(path):
+    name = os.path.basename(path)
     custom_metric = {"pfbeta_tf": pfbeta_tf}
-    model = tf.keras.models.load_model(model_path, custom_objects=custom_metric)
-    print(f'Loading model from: {model_path}')
+    model = tf.keras.models.load_model(path, custom_objects=custom_metric)
+    print(f'Loading model: {name}')
     return model
