@@ -26,4 +26,4 @@ print(model.summary())
 train_gen, val_gen = get_train_val_generator(config=config, environment=args.kaggle)
 history = model.fit(train_gen, validation_data=val_gen, epochs=config['hyperparams']['epochs'],
                     callbacks=[wandb_callback])
-save_model(model, name=wandb.run.name.replace('-', '_'), dir_models=config['data']['dir_models'])
+save_model(model, name=wandb.run.name.replace('-', '_'), dir_models=config['data']['dir_models'][args.kaggle])

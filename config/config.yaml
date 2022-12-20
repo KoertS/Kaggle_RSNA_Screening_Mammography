@@ -15,10 +15,12 @@ data:
     local: train_images/
     kaggle: train_images_processed/
   test_images_dir: test_images/
-  dir_models: ../models/
+  dir_models:
+    local: ../models/
+    kaggle: /kaggle/working/models/
   path_submission:
     local: ../data/output/submission.csv
-    kaggle: submission.csv
+    kaggle: /kaggle/working/models/submission.csv
 
 hyperparams:
   train_size: 0.8
