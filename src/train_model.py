@@ -21,7 +21,7 @@ wandb.config.update(config['hyperparams'])
 wandb_callback = wandb.keras.WandbCallback(log_weights=True)
 
 model = create_model(config['hyperparams'])
-print(model.summary())
+print(f'Training model: {model.name}')
 
 train_gen, val_gen = get_train_val_generator(config=config, environment=args.kaggle)
 history = model.fit(train_gen, validation_data=val_gen, epochs=config['hyperparams']['epochs'],
