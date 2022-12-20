@@ -7,11 +7,13 @@ data:
       train: ../data/processed/
       test: ../data/processed/
     kaggle:
-      train: /kaggle/input/rsna-mammography-images-as-pngs/images_as_pngs/train_images_processed/
+      train: /kaggle/input/rsna-mammography-images-as-pngs/images_as_pngs/
       test: processed/
   train_dataframe: train.csv
   test_dataframe: test.csv
-  train_images_dir: train_images/
+  train_images_dir:
+    local: train_images/
+    kaggle: train_images_processed/
   test_images_dir: test_images/
   dir_models: ../models/
   path_submission:

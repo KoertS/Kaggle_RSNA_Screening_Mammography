@@ -68,7 +68,8 @@ class DataGenerator(tf.keras.utils.Sequence):
 def get_train_val_generator(config, environment):
     df = get_train_dataframe(config['data'], environment)
     df_train, df_val = split_dataframe(df, config['hyperparams']['train_size'])
-    path_images = config['data']['dir_processed'][environment]['train'] + config['data']['train_images_dir']
+    path_images = config['data']['dir_processed'][environment]['train'] + config['data']['train_images_dir'][
+        environment]
     train_gen = DataGenerator(dataframe=df_train, path_images=path_images,
                               batch_size=config['hyperparams']['batch_size'])
     val_gen = DataGenerator(dataframe=df_val, path_images=path_images,
