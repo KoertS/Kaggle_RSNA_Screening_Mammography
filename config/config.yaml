@@ -7,7 +7,7 @@ data:
       train: ../data/processed/
       test: ../data/processed/
     kaggle:
-      train: /kaggle/input/rsna-mammography-images-as-pngs/train_images_processed/
+      train: /kaggle/input/rsna-mammography-images-as-pngs/images_as_pngs/train_images_processed/
       test: processed/
   train_dataframe: train.csv
   test_dataframe: test.csv
