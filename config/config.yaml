@@ -20,7 +20,7 @@ data:
     kaggle: /kaggle/working/models/
   path_submission:
     local: ../data/output/submission.csv
-    kaggle: /kaggle/working/models/submission.csv
+    kaggle: /kaggle/working/submission.csv
 
 hyperparams:
   train_size: 0.8
