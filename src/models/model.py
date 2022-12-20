@@ -49,8 +49,7 @@ def create_model(hyperparams):
         model = build_efficient_net()
     else:
         model = build_test_model()
-
-    metrics = [pfbeta_tf]
+    metrics = [pfbeta_tf, tf.keras.metrics.AUC()]
     model.compile(optimizer=hyperparams['optimizer'],
                   loss=hyperparams['loss'],
                   metrics=metrics)
