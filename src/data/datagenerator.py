@@ -4,11 +4,12 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 
+from .extract_roi import extract_roi
 from .preprocessor import Preprocessor
 
 
 class DataGenerator(tf.keras.utils.Sequence):
-    def __init__(self, dataframe, path_images, batch_size=32, shuffle=True):
+    def __init__(self, dataframe, path_images, batch_size=32, shuffle=True, crop_roi=False):
         self.dataframe = dataframe.copy()
         if 'prediction_id' not in dataframe:
             self.dataframe['prediction_id'] = dataframe["patient_id"].astype(str) + '_' + dataframe[
@@ -22,6 +23,7 @@ class DataGenerator(tf.keras.utils.Sequence):
         self.batch_size = batch_size
         self.shuffle = shuffle
         self.on_epoch_end()
+        self.crop_roi = crop_roi
 
     def __len__(self):
         """Denotes the number of batches per epoch"""
@@ -36,6 +38,8 @@ class DataGenerator(tf.keras.utils.Sequence):
     def __get_input(self, path):
         image = tf.keras.preprocessing.image.load_img(path)
         image_arr = tf.keras.preprocessing.image.img_to_array(image)
+        if self.crop_roi:
+            image_arr = extract_roi(image_arr)
         return image_arr
 
     def on_epoch_end(self):
@@ -71,9 +75,10 @@ def get_train_val_generator(config, environment):
     path_images = config['data']['dir_processed'][environment]['train'] + config['data']['train_images_dir'][
         environment]
     train_gen = DataGenerator(dataframe=df_train, path_images=path_images,
-                              batch_size=config['hyperparams']['batch_size'])
+                              batch_size=config['hyperparams']['batch_size'],
+                              crop_roi=config['hyperparams']['crop_roi'])
     val_gen = DataGenerator(dataframe=df_val, path_images=path_images,
-                            batch_size=config['hyperparams']['batch_size'])
+                            batch_size=config['hyperparams']['batch_size'], crop_roi=config['hyperparams']['crop_roi'])
     return train_gen, val_gen
 
 

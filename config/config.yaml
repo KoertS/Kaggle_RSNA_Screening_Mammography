@@ -29,3 +29,4 @@ hyperparams:
   optimizer: adam
   loss: binary_crossentropy
   model: EfficientNet
+  crop_roi: True
