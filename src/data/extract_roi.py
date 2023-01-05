@@ -25,6 +25,10 @@ def truncation_normalization(img):
     Pmin = np.percentile(img[img != 0], 5)
     Pmax = np.percentile(img[img != 0], 99)
     truncated = np.clip(img, Pmin, Pmax)
-    normalized = (truncated - Pmin) / (Pmax - Pmin)
+
+    if Pmax == Pmin:
+        normalized = truncated
+    else:
+        normalized = (truncated - Pmin) / (Pmax - Pmin)
     normalized[img == 0] = 0
     return normalized
