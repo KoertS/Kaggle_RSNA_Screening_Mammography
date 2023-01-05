@@ -5,8 +5,9 @@ import numpy as np
 def extract_roi(img, resize=(256, 256)):
     roi = crop_roi(img)
     img_normalized = truncation_normalization(roi)
-    img_final = cv2.resize(img_normalized, resize)
-    return img_final
+    img_resized = cv2.resize(img_normalized, resize)
+    final_img = np.stack((img_resized,) * 3, axis=-1)
+    return final_img
 
 
 def crop_roi(img):
