@@ -16,7 +16,7 @@ with open(args.config) as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
 
 wandb.login(key=os.environ.get("WANDB_API_KEY"))
-wandb.init(project=os.environ.get("WANDB_PROJECT_NAME"))
+wandb.init(project="Kaggle_RSNA_Screening_Mammography")
 wandb.config.update(config['hyperparams'])
 wandb_callback = wandb.keras.WandbCallback(log_weights=True)
 
