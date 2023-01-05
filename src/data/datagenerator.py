@@ -9,7 +9,7 @@ from .preprocessor import Preprocessor
 
 
 class DataGenerator(tf.keras.utils.Sequence):
-    def __init__(self, dataframe, path_images, batch_size=32, shuffle=True, crop_roi=False):
+    def __init__(self, dataframe, path_images, input_size, batch_size=32, shuffle=True, crop_roi=False):
         self.dataframe = dataframe.copy()
         if 'prediction_id' not in dataframe:
             self.dataframe['prediction_id'] = dataframe["patient_id"].astype(str) + '_' + dataframe[
@@ -24,6 +24,7 @@ class DataGenerator(tf.keras.utils.Sequence):
         self.shuffle = shuffle
         self.on_epoch_end()
         self.crop_roi = crop_roi
+        self.input_size = input_size
 
     def __len__(self):
         """Denotes the number of batches per epoch"""
@@ -39,7 +40,7 @@ class DataGenerator(tf.keras.utils.Sequence):
         image = tf.keras.preprocessing.image.load_img(path)
         image_arr = tf.keras.preprocessing.image.img_to_array(image)
         if self.crop_roi:
-            image_arr = extract_roi(image_arr)
+            image_arr = extract_roi(image_arr, (self.input_size,) * 2)
         return image_arr
 
     def on_epoch_end(self):
@@ -72,14 +73,26 @@ class DataGenerator(tf.keras.utils.Sequence):
 def get_train_val_generator(config, environment):
     df = get_train_dataframe(config['data'], environment)
     df_train, df_val = split_dataframe(df, config['hyperparams']['train_size'])
-    path_images = config['data']['dir_processed'][environment]['train'] + config['data']['train_images_dir'][
-        environment]
+    path_images = get_path_to_images(config, environment)
     train_gen = DataGenerator(dataframe=df_train, path_images=path_images,
                               batch_size=config['hyperparams']['batch_size'],
-                              crop_roi=config['hyperparams']['crop_roi'])
+                              crop_roi=config['hyperparams']['crop_roi'],
+                              input_size=config['hyperparams']['input_size'])
     val_gen = DataGenerator(dataframe=df_val, path_images=path_images,
-                            batch_size=config['hyperparams']['batch_size'], crop_roi=config['hyperparams']['crop_roi'])
+                            batch_size=config['hyperparams']['batch_size'],
+                            crop_roi=config['hyperparams']['crop_roi'],
+                            input_size=config['hyperparams']['input_size'])
     return train_gen, val_gen
+
+
+def get_path_to_images(config, environment):
+    path_images = config['data']['dir_processed'][environment]['train'] + config['data']['train_images_dir'][
+        environment]
+    input_size = config['hyperparams']['input_size']
+
+    if environment == 'kaggle' and input_size != 256:
+        path_images += f'_{input_size}'
+    return path_images
 
 
 def split_dataframe(df, ratio, shuffle=True):

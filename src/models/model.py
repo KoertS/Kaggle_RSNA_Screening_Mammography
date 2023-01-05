@@ -15,9 +15,9 @@ def build_test_model(inp_dim=(256, 256, 3)):
 
 
 def build_efficient_net(model_name="EfficientNetB4",
-                        inp_dim=(256, 256),
+                        inp_dim=(256, 256, 3),
                         include_top=False):
-    base = getattr(efn, model_name)(input_shape=(*inp_dim, 3),
+    base = getattr(efn, model_name)(input_shape=inp_dim,
                                     weights='imagenet',
                                     include_top=include_top)
     inp = base.inputs
@@ -45,10 +45,11 @@ def pfbeta_tf(labels, preds, beta=1):
 
 
 def create_model(hyperparams):
+    input_dim = (*(hyperparams['input_size'],) * 2, 3)
     if hyperparams['model'] == 'EfficientNet':
-        model = build_efficient_net()
+        model = build_efficient_net(inp_dim=input_dim)
     else:
-        model = build_test_model()
+        model = build_test_model(inp_dim=input_dim)
     metrics = [pfbeta_tf, tf.keras.metrics.AUC()]
     model.compile(optimizer=hyperparams['optimizer'],
                   loss=hyperparams['loss'],
