@@ -19,7 +19,7 @@ wandb.login(key=os.environ.get("WANDB_API_KEY"))
 wandb.init(project="Kaggle_RSNA_Screening_Mammography")
 wandb.config.update(config['hyperparams'])
 wandb_callback = wandb.keras.WandbCallback(log_weights=True)
-wandb.log({"environment": args.kaggle})
+wandb.config.update({"environment": args.kaggle})
 
 model = create_model(config['hyperparams'])
 print(f'Training model: {model.name}')
