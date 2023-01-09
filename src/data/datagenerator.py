@@ -1,4 +1,5 @@
 import os
+import re
 
 import numpy as np
 import pandas as pd
@@ -85,13 +86,24 @@ def get_train_val_generator(config, environment):
     return train_gen, val_gen
 
 
+def add_suffix_to_last_folder(path, suffix):
+    pattern = re.compile(r'.*\/(.+)\/')
+    last_folder = pattern.search(path)
+    if last_folder:
+        return re.sub(last_folder.group(1), f'{last_folder.group(1)}{suffix}', path)
+    return path
+
+
 def get_path_to_images(config, environment):
     path_images = config['data']['dir_processed'][environment]['train'] + config['data']['train_images_dir'][
         environment]
     input_size = config['hyperparams']['input_size']
 
     if environment == 'kaggle' and input_size != 256:
-        path_images += f'_{input_size}/'
+        suffix = f'_{input_size}'
+        path_base = add_suffix_to_last_folder(config['data']['dir_processed'][environment]['train'], suffix=suffix)
+        path_images = path_base + config['data']['train_images_dir'][environment]
+        path_images = add_suffix_to_last_folder(path_images, suffix=suffix)
     return path_images
 
 
