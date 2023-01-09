@@ -91,7 +91,7 @@ def get_path_to_images(config, environment):
     input_size = config['hyperparams']['input_size']
 
     if environment == 'kaggle' and input_size != 256:
-        path_images += f'_{input_size}'
+        path_images += f'_{input_size}/'
     return path_images
 
 
