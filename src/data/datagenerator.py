@@ -10,7 +10,8 @@ from .preprocessor import Preprocessor
 
 
 class DataGenerator(tf.keras.utils.Sequence):
-    def __init__(self, dataframe, path_images, input_size, batch_size=32, shuffle=True, crop_roi=False):
+    def __init__(self, dataframe, path_images, input_size, batch_size=32, shuffle=True, crop_roi=False,
+                 oversampling_factor=1):
         self.dataframe = dataframe.copy()
         if 'prediction_id' not in dataframe:
             self.dataframe['prediction_id'] = dataframe["patient_id"].astype(str) + '_' + dataframe[
@@ -26,6 +27,12 @@ class DataGenerator(tf.keras.utils.Sequence):
         self.on_epoch_end()
         self.crop_roi = crop_roi
         self.input_size = input_size
+
+        self.oversampling_factor = oversampling_factor
+        if oversampling_factor > 1:
+            minority_class_df = self.dataframe[self.dataframe['cancer'] == 1]
+            minority_class_df = pd.concat([minority_class_df] * (oversampling_factor - 1))
+            self.dataframe = pd.concat([self.dataframe, minority_class_df], ignore_index=True)
 
     def __len__(self):
         """Denotes the number of batches per epoch"""

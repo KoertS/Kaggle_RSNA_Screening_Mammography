@@ -32,3 +32,4 @@ hyperparams:
   model: EfficientNet
   crop_roi: True
   input_size: 256
+  oversampling_factor: 5
