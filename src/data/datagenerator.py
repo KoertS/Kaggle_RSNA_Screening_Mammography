@@ -98,7 +98,6 @@ def get_path_to_images(config, environment):
     path_images = config['data']['dir_processed'][environment]['train'] + config['data']['train_images_dir'][
         environment]
     input_size = config['hyperparams']['input_size']
-
     if environment == 'kaggle' and input_size != 256:
         suffix = f'_{input_size}'
         path_base = add_suffix_to_last_folder(config['data']['dir_processed'][environment]['train'], suffix=suffix)

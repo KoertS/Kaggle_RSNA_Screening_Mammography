@@ -27,6 +27,7 @@ hyperparams:
   batch_size: 16
   epochs: 10
   optimizer: adam
+  learning_rate: 0.0001
   loss: binary_crossentropy
   model: EfficientNet
   crop_roi: True

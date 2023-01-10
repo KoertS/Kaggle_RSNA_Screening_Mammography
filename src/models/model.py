@@ -51,10 +51,28 @@ def create_model(hyperparams):
     else:
         model = build_test_model(inp_dim=input_dim)
     metrics = [pfbeta_tf, tf.keras.metrics.AUC()]
-    model.compile(optimizer=hyperparams['optimizer'],
-                  loss=hyperparams['loss'],
+    optimizer = get_optimizer(hyperparams)
+    loss_function = get_loss_function(hyperparams)
+    model.compile(optimizer=optimizer,
+                  loss=loss_function,
                   metrics=metrics)
     return model
+
+
+def get_optimizer(hyperparams):
+    optimizer = hyperparams['optimizer']
+    if optimizer == 'adam':
+        return tf.keras.optimizers.Adam(learning_rate=hyperparams['learning_rate'])
+    else:
+        raise ValueError(f'Unrecognized optimizer: {optimizer}')
+
+
+def get_loss_function(hyperparams):
+    loss_function = hyperparams['loss']
+    if loss_function == 'binary_crossentropy':
+        return tf.keras.losses.BinaryCrossentropy()
+    else:
+        raise ValueError(f'Unrecognized loss function: {loss_function}')
 
 
 def save_model(model, dir_models, name, ):
