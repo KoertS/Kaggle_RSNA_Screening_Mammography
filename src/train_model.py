@@ -12,7 +12,7 @@ parser.add_argument("--kaggle", nargs="?", default='local', const="kaggle", help
 parser.add_argument('--config', type=str, nargs='?', default='../config/config.yaml', help='Path to the config file')
 args = parser.parse_args()
 
-with open(args.config) as f:
+with open(os.path.abspath(args.config)) as f:
     config = yaml.load(f, Loader=yaml.FullLoader)
 
 wandb.login(key=os.environ.get("WANDB_API_KEY"))
